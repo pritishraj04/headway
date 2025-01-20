@@ -4,7 +4,6 @@
 	import Values from '$lib/components/Values.svelte';
 	import Plus from '$lib/components/Plus.svelte';
 	import Legal from '$lib/components/Legal.svelte';
-	import Footer from '$lib/components/Footer.svelte';
 	import { Splide, SplideSlide } from '@splidejs/svelte-splide';
 
 	const options = {
@@ -56,7 +55,6 @@
 	<Exclusive />
 	<Plus />
 	<Legal />
-	<Footer />
 </main>
 
 <style>
