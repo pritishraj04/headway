@@ -5,6 +5,7 @@
 	import Plus from '$lib/components/Plus.svelte';
 	import Legal from '$lib/components/Legal.svelte';
 	import { Splide, SplideSlide } from '@splidejs/svelte-splide';
+	import Ucta from '$lib/components/Ucta.svelte';
 
 	const options = {
 		arrows: false,
@@ -47,6 +48,7 @@
 					</SplideSlide>
 				{/each}
 			</Splide>
+			<Ucta />
 			<p class="hero-bottom-bar">REAL ESTATE • INTERIOR DESIGN • TURNKEY CONSTRUCTION</p>
 		</div>
 	</div>
@@ -64,6 +66,9 @@
 		padding: 0.4rem 0.5rem;
 		background-color: #d6d6d6;
 		color: #7f7e79;
+	}
+	.hero-wrapper {
+		position: relative;
 	}
 	.carousel-img {
 		max-height: 800px;
