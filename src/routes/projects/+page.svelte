@@ -70,34 +70,31 @@
 		<div class="project-filter-bar">
 			<div class="project-filter-item">
 				<label for="project-category">Category:</label>
-				<select id="project-category" class="form-select">
+				<select id="project-category" class="form-select project-filter-dropdown">
 					<option value="">All Categories</option>
 					<!-- Populate categories dynamically -->
 				</select>
 			</div>
 			<div class="project-filter-item">
 				<label for="project-status">Status:</label>
-				<select id="project-status" class="form-select">
+				<select id="project-status" class="form-select project-filter-dropdown">
 					<option value="">All Status</option>
 					<!-- Populate status dynamically -->
 				</select>
 			</div>
 			<div class="project-filter-item">
 				<label for="project-location">Location:</label>
-				<select id="project-location" class="form-select">
+				<select id="project-location" class="form-select project-filter-dropdown">
 					<option value="">All Locations</option>
 					<!-- Populate locations dynamically -->
 				</select>
 			</div>
 			<div class="project-filter-item">
 				<label for="project-price">Price Range:</label>
-				<select id="project-price" class="form-select">
+				<select id="project-price" class="form-select project-filter-dropdown">
 					<option value="">All Prices</option>
 					<!-- Populate price range dynamically -->
 				</select>
-			</div>
-			<div class="project-filter-item">
-				<button class="btn btn-primary project-filter-btn">Filter</button>
 			</div>
 			<div class="project-filter-item">
 				<button class="btn btn-secondary project-reset-btn">Reset</button>
@@ -198,7 +195,7 @@
 		border-radius: 4px;
 		box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.15);
 		color: #666;
-		font-family: Source Sans Pro;
+		margin-bottom: 14px;
 		font-size: 18px;
 		height: 60px;
 		line-height: 1.27;
@@ -207,17 +204,39 @@
 	}
 	.project-filter-bar {
 		margin-bottom: 20px;
-		display: flex;
-		align-items: center;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
 		justify-content: space-between;
-		padding: 10px 20px;
-		border-radius: 4px;
+		border: 1px solid #dabb0b;
+		box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.15);
+
+		align-items: center;
+		padding: 10px 0;
 	}
 	.project-filter-item {
-		margin-right: 10px;
+		padding: 0.5rem 1rem;
 	}
-	.project-filter-btn {
-		padding: 0 20px;
+	.project-filter-item:not(:last-child) {
+		border-right: 1px solid #dabb0b;
+	}
+	@media (max-width: 730px) {
+		.project-filter-item:not(:last-child) {
+			border-right: none;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			border-bottom: 1px solid #dabb0b;
+		}
+	}
+	.project-filter-dropdown {
+		position: relative;
+		display: inline-block;
+		background-color: #fff;
+		border-radius: 4px;
+		cursor: pointer;
+		padding: 10px;
+		font-size: 16px;
+		border: none;
 	}
 	.project-reset-btn {
 		padding: 0 10px;
