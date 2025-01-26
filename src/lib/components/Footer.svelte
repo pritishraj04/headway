@@ -106,6 +106,8 @@
 		color: #7c7c7c;
 		font-size: 0.8rem;
 		margin-bottom: 0.8rem;
+		text-align: start;
+		max-width: unset;
 	}
 	.footer-navigation-header {
 		color: #f8f8f8;
