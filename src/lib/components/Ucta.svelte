@@ -21,7 +21,7 @@
 <style>
 	.ucta-wrapper {
 		position: absolute;
-		right: 7rem;
+		right: 4rem;
 		bottom: 6rem;
 		z-index: 10;
 	}
@@ -121,7 +121,7 @@
 	@media (max-width: 768px) {
 		/* make elemets small for mobile devices */
 		.ucta-wrapper {
-			bottom: 4rem;
+			bottom: 8rem;
 			right: 2rem;
 		}
 		.ucta-menu-item a {

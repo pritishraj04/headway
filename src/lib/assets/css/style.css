@@ -215,6 +215,10 @@ svg {
 	.section-heading {
 		font-size: 1rem;
 	}
+	.section-heading::before,
+	.section-heading::after {
+		display: none;
+	}
 	.section-description {
 		font-size: 0.7rem;
 	}

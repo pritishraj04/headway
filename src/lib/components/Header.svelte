@@ -1,6 +1,16 @@
 <script>
-	let isMenuVisible = false;
-	let y;
+	import HamburgerBtn from './HamburgerBtn.svelte';
+
+	let isMenuVisible = $state(false);
+	let y = $state(0);
+
+	const toggleMenu = () => {
+		isMenuVisible = !isMenuVisible;
+	};
+
+	const closeMenu = () => {
+		isMenuVisible = false;
+	};
 </script>
 
 <svelte:window bind:scrollY={y} />
@@ -13,27 +23,20 @@
 					<img class="company-logo" src="https://placehold.co/120x40/png" alt="Company Logo" />
 				</a>
 			</div>
-			<button
-				class="menu-toggle"
-				aria-label="Hamburger Menu"
-				onclick={() => (isMenuVisible = !isMenuVisible)}
-			>
-				<span></span>
-				<span></span>
-			</button>
+			<HamburgerBtn {isMenuVisible} {toggleMenu} />
 			<nav class="header-navigation" class:is-visible={isMenuVisible}>
 				<ul class="header-navs" data-role="list">
 					<li class="header-nav">
-						<a class="link-inverted nav-link" href="/brand">Brand Story</a>
+						<a class="link-inverted nav-link" onclick={closeMenu} href="/brand">Brand Story</a>
 					</li>
 					<li class="header-nav">
-						<a class="link-inverted nav-link" href="/company">Company</a>
+						<a class="link-inverted nav-link" onclick={closeMenu} href="/company">Company</a>
 					</li>
 					<li class="header-nav">
-						<a class="link-inverted nav-link" href="/projects">Projects</a>
+						<a class="link-inverted nav-link" onclick={closeMenu} href="/projects">Projects</a>
 					</li>
 					<li class="header-nav">
-						<a class="link-inverted nav-link" href="/contact">Contact</a>
+						<a class="link-inverted nav-link" onclick={closeMenu} href="/contact">Contact</a>
 					</li>
 				</ul>
 			</nav>
@@ -55,20 +58,10 @@
 		/* backdrop-filter: blur(20px); */
 		transition: background-color 0.3s ease-in-out;
 	}
-	.menu-toggle {
-		display: none;
-		cursor: pointer;
-		background-color: transparent;
-		border: none;
-		padding: 0;
+	.company-logo {
+		width: 7rem;
 	}
-	.menu-toggle span {
-		display: block;
-		width: 3rem;
-		height: 2px;
-		background-color: white;
-		margin: 0.5rem;
-	}
+
 	.header-wrapper {
 		display: flex;
 		justify-content: space-between;
@@ -84,8 +77,11 @@
 		font-size: 1.2rem;
 	}
 	@media screen and (max-width: 820px) {
-		.menu-toggle {
-			display: block;
+		.header-wrapper {
+			padding-block: 1rem;
+		}
+		.company-logo {
+			width: 5rem;
 		}
 		.header-navigation {
 			opacity: 0;

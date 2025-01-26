@@ -74,7 +74,7 @@
 					<li>
 						<form action="#">
 							<input type="email" placeholder="Enter your email" required />
-							<button type="submit">Subscribe</button>
+							<button class="subs-button" type="submit">Subscribe</button>
 						</form>
 					</li>
 				</ul>
@@ -122,6 +122,16 @@
 	}
 	.footer-nav-link {
 		font-size: 1rem;
+	}
+	.subs-button {
+		background-color: #ddbc19;
+		color: #ffffff;
+		font-weight: 700;
+		text-transform: uppercase;
+		border: none;
+		padding: 0.8rem 1rem;
+		border-radius: 5px;
+		cursor: pointer;
 	}
 	.copyright {
 		color: #f8f8f8;
