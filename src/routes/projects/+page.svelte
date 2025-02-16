@@ -4,12 +4,56 @@
 
 	const { data } = $props();
 	const projects = data.projects;
+	$inspect(projects);
 
-	let toggleOverlay = $state([]);
-
-	projects.forEach((el) => {
-		toggleOverlay.push(false);
+	let searchTerm = $state('');
+	let filters = $state({
+		category: '',
+		status: '',
+		location: '',
+		price: ''
 	});
+
+	const filteredProjects = () => {
+		return projects.filter((project) => {
+			const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase());
+			const matchesCategory = !filters.category || project.residentialType === filters.category;
+			const matchesStatus = !filters.status || project.status === filters.status;
+			const matchesLocation = !filters.location || project.city === filters.location;
+			const matchesPrice =
+				!filters.price ||
+				(project.prices &&
+					project.prices.some((unit) => {
+						const range = getPriceRange(filters.price);
+						if (!range) return true;
+						return (
+							(!range.min || unit.minimum_price >= range.min) &&
+							(!range.max || unit.maximum_price <= range.max)
+						);
+					}));
+
+			return matchesSearch && matchesCategory && matchesStatus && matchesLocation && matchesPrice;
+		});
+	};
+	$inspect(filteredProjects);
+
+	let toggleOverlay = $state(projects.map(() => false));
+
+	const priceRanges = [
+		{ label: 'Below 1 Cr', max: 10_000_000 },
+		{ label: '1 Cr - 3 Cr', min: 10_000_000, max: 30_000_000 },
+		{ label: 'Above 3 Cr', min: 30_000_000 }
+	];
+	const resetFilters = () => {
+		filters.category = '';
+		filters.status = '';
+		filters.location = '';
+		filters.price = '';
+	};
+
+	function getPriceRange(label) {
+		return priceRanges.find((r) => r.label === label);
+	}
 </script>
 
 <main>
@@ -21,12 +65,20 @@
 	</div>
 	<div class="container">
 		<div class="project-search">
-			<input type="text" class="project-search-input" placeholder="Search projects" />
+			<input
+				type="text"
+				bind:value={searchTerm}
+				onchange={filteredProjects}
+				class="project-search-input"
+				placeholder="Search projects"
+				aria-label="Search projects by name"
+			/>
 		</div>
 
-		<!-- <ProjectFilter {projects} /> -->
+		<ProjectFilter bind:filters {projects} {filteredProjects} {resetFilters} />
+
 		<div class="project-list">
-			{#each projects as project, index}
+			{#each filteredProjects() as project, index}
 				<ProjectCard {project} {toggleOverlay} {index} />
 			{/each}
 		</div>

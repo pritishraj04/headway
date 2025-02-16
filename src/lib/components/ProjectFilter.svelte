@@ -1,162 +1,128 @@
 <script>
-	let { projects } = $props();
-	// Filter criteria
-	let filters = $state({
-		category: '',
-		status: '',
-		location: '',
-		price: ''
-	});
+	let { projects, filteredProjects, filters, resetFilters } = $props();
 
-	// Extract unique values dynamically for dropdowns
-	const categories = [...new Set(projects.map((p) => p.residentialType))];
-	const statuses = [...new Set(projects.map((p) => p.status))];
-	const locations = [...new Set(projects.map((p) => p.city))];
+	// Predefined status options
+	const statusOptions = ['new', 'ready', 'underconstruction', 'soldOut'];
 
-	// Price ranges (example ranges, adjust as needed)
+	// Derived values
+	const categories = $derived([...new Set(projects.map((p) => p.residentialType))]);
+	const locations = $derived([...new Set(projects.map((p) => p.city))]);
+
 	const priceRanges = [
-		{ label: 'Below 1 Cr', min: 0, max: 10000000 },
-		{ label: '1 Cr - 3 Cr', min: 10000000, max: 30000000 },
-		{ label: 'Above 3 Cr', min: 30000000 }
+		{ label: 'Below 1 Cr', max: 10_000_000 },
+		{ label: '1 Cr - 3 Cr', min: 10_000_000, max: 30_000_000 },
+		{ label: 'Above 3 Cr', min: 30_000_000 }
 	];
-
-	// Filtered projects
-	let filteredProjects = projects;
-
-	// Update filters and apply filtering logic
-	function applyFilters() {
-		filters.subscribe((filter) => {
-			filteredProjects = projects.filter((p) => {
-				const matchesCategory = !filter.category || p.residentialType === filter.category;
-				const matchesStatus = !filter.status || p.status === filter.status;
-				const matchesLocation = !filter.location || p.city === filter.location;
-				const matchesPrice =
-					!filter.price ||
-					(priceRanges.find((range) => range.label === filter.price)?.min <=
-						Math.min(...p.starting_prices.map((sp) => sp.minimum_price)) &&
-						(priceRanges.find((range) => range.label === filter.price)?.max || Infinity) >=
-							Math.min(...p.starting_prices.map((sp) => sp.minimum_price)));
-				return matchesCategory && matchesStatus && matchesLocation && matchesPrice;
-			});
-		});
-	}
-
-	// Reset filters
-	function resetFilters() {
-		filters.set({
-			category: '',
-			status: '',
-			location: '',
-			price: ''
-		});
-		applyFilters();
-	}
 </script>
 
 <div class="project-filter-bar">
+	<!-- Category Filter -->
 	<div class="project-filter-item">
-		<label for="project-category">Category:</label>
-		<select
-			id="project-category"
-			class="form-select project-filter-dropdown"
-			bind:value={$filters.category}
-			onchange={applyFilters}
-		>
+		<label for="category">Category:</label>
+		<select id="category" bind:value={filters.category} onchange={filteredProjects}>
 			<option value="">All Categories</option>
 			{#each categories as category}
 				<option value={category}>{category}</option>
 			{/each}
 		</select>
 	</div>
+
+	<!-- Status Filter -->
 	<div class="project-filter-item">
-		<label for="project-status">Status:</label>
-		<select
-			id="project-status"
-			class="form-select project-filter-dropdown"
-			bind:value={$filters.status}
-			onchange={applyFilters}
-		>
-			<option value="">All Status</option>
-			{#each statuses as status}
-				<option value={status}>{status}</option>
+		<label for="status">Status:</label>
+		<select id="status" bind:value={filters.status} onchange={filteredProjects}>
+			<option value="">All Statuses</option>
+			{#each statusOptions as status}
+				<option value={status}>{status.toUpperCase()}</option>
 			{/each}
 		</select>
 	</div>
+
+	<!-- Location Filter -->
 	<div class="project-filter-item">
-		<label for="project-location">Location:</label>
-		<select
-			id="project-location"
-			class="form-select project-filter-dropdown"
-			bind:value={$filters.location}
-			onchange={applyFilters}
-		>
+		<label for="location">Location:</label>
+		<select id="location" bind:value={filters.location} onchange={filteredProjects}>
 			<option value="">All Locations</option>
 			{#each locations as location}
 				<option value={location}>{location}</option>
 			{/each}
 		</select>
 	</div>
+
+	<!-- Price Filter -->
 	<div class="project-filter-item">
-		<label for="project-price">Price Range:</label>
-		<select
-			id="project-price"
-			class="form-select project-filter-dropdown"
-			bind:value={$filters.price}
-			onchange={applyFilters}
-		>
+		<label for="price">Price Range:</label>
+		<select id="price" bind:value={filters.price} onchange={filteredProjects}>
 			<option value="">All Prices</option>
-			{#each priceRanges as price}
-				<option value={price.label}>{price.label}</option>
+			{#each priceRanges as range}
+				<option value={range.label}>{range.label}</option>
 			{/each}
 		</select>
 	</div>
+
+	<!-- Reset Button -->
 	<div class="project-filter-item">
-		<button class="btn btn-secondary project-reset-btn" onclick={resetFilters}> Reset </button>
+		<button class="reset-btn" onclick={resetFilters} aria-label="Reset all filters">
+			Reset Filters
+		</button>
 	</div>
 </div>
 
 <style>
 	.project-filter-bar {
-		margin-bottom: 20px;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-		justify-content: space-between;
-		border: 1px solid #dabb0b;
-		box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.15);
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: 1rem;
+		padding: 1.5rem;
+		background: #ffffff;
+		border-radius: 8px;
+		box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+		margin-bottom: 2rem;
+	}
 
-		align-items: center;
-		padding: 10px 0;
-	}
 	.project-filter-item {
-		padding: 0.5rem 1rem;
-	}
-	.project-filter-item:not(:last-child) {
 		display: flex;
-		justify-content: space-between;
-		flex-wrap: wrap;
-		align-items: center;
-		border-right: 1px solid #dabb0b;
+		flex-direction: column;
+		gap: 0.5rem;
 	}
-	.project-filter-dropdown {
-		position: relative;
-		display: inline-block;
-		background-color: #fff;
-		border-radius: 4px;
+
+	select {
+		padding: 0.75rem;
+		border: 1px solid #e0e0e0;
+		border-radius: 6px;
+		background: white;
+		font-size: 1rem;
+		width: 100%;
+		appearance: none;
+		background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+		background-repeat: no-repeat;
+		background-position: right 0.75rem center;
+		background-size: 1.2em;
+	}
+
+	.reset-btn {
+		padding: 0.75rem 1.5rem;
+		background: #f8f9fa;
+		border: 1px solid #e0e0e0;
+		border-radius: 6px;
 		cursor: pointer;
-		padding: 10px;
-		font-size: 16px;
-		border: none;
+		transition: all 0.2s ease;
+		align-self: flex-end;
 	}
-	.project-reset-btn {
-		padding: 0 10px;
+
+	.reset-btn:hover {
+		background: #e9ecef;
+		border-color: #d0d0d0;
 	}
-	@media (max-width: 730px) {
+
+	@media (max-width: 768px) {
 		.project-filter-bar {
 			grid-template-columns: 1fr;
 		}
-		.project-filter-item:not(:last-child) {
-			border-right: none;
-			border-bottom: 1px solid #dabb0b;
+
+		.reset-btn {
+			width: 100%;
+			align-self: center;
 		}
 	}
 </style>
